@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SmartStore 🧠🛒</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f2f4f8;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+    .ai-box {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 320px;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    input {
+      width: 70%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+    button {
+      padding: 8px 14px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1e40af;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      width: 90%;
+      max-width: 700px;
+    }
+    .product {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .product h3 { margin: 5px 0; }
+    .cart {
+      margin-top: 25px;
+      background: white;
+      padding: 15px;
+      width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .cart-item {
+      border-bottom: 1px solid #eee;
+      padding: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>AI SmartStore 🧠🛒</h1>
+
+  <div class="ai-box">
+    <p><b>Ask AI what to buy:</b></p>
+    <input type="text" id="query" placeholder="e.g. I feel lazy">
+    <button onclick="askAI()">Ask AI</button>
+    <p id="suggestion"></p>
+  </div>
+
+  <div class="products" id="productList"></div>
+
+  <div class="cart">
+    <h3>Your Cart 🛍</h3>
+    <div id="cartItems">No items yet.</div>
+  </div>
+
+  <script>
+    const products = [
+      { name: "Comfy Hoodie", category: "Clothing", price: 25 },
+      { name: "Wireless Earbuds", category: "Electronics", price: 40 },
+      { name: "Running Shoes", category: "Footwear", price: 55 },
+      { name: "Smart Water Bottle", category: "Gadgets", price: 30 },
+      { name: "Silk Scarf", category: "Accessories", price: 15 },
+    ];
+
+    const cart = [];
+
+    // Display product list
+    const productList = document.getElementById("productList");
+    products.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <h3>${p.name}</h3>
+        <p>${p.category}</p>
+        <p><b>$${p.price}</b></p>
+        <button onclick="addToCart(${i})">Add to Cart</button>
+      `;
+      productList.appendChild(div);
+    });
+
+    function addToCart(index) {
+      cart.push(products[index]);
+      renderCart();
+    }
+
+    function renderCart() {
+      const c = document.getElementById("cartItems");
+      if (cart.length === 0) {
+        c.innerHTML = "No items yet.";
+        return;
+      }
+      c.innerHTML = cart.map(item => `
+        <div class="cart-item">${item.name} - $${item.price}</div>
+      `).join("");
+    }
+
+    function askAI() {
+      const query = document.getElementById("query").value.toLowerCase();
+      let suggested;
+
+      if (query.includes("cold") || query.includes("lazy")) suggested = products[0];
+      else if (query.includes("music") || query.includes("travel")) suggested = products[1];
+      else if (query.includes("run") || query.includes("sport")) suggested = products[2];
+      else if (query.includes("drink") || query.includes("health")) suggested = products[3];
+      else suggested = products[4];
+
+      document.getElementById("suggestion").innerHTML =
+        `AI suggests: <b>${suggested.name}</b> ($${suggested.price}) <br>
+         <button onclick="addToCart(${products.indexOf(suggested)})">Add to Cart</button>`;
+    }
+  </script>
+
+</body>
+</html>
